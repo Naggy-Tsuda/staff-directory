@@ -2,15 +2,13 @@ import Image from "next/image";
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import { createClient } from "@/lib/supabase/server";
-
+import DatagridClient from "@/components/list/DatagridClient";
 
 export default async function Home() {
 
   const supabase = await createClient();
   const { data: instruments } = await supabase.from('instruments').select('*');
   console.log("🚀 ~ Home ~ data:", instruments);
-
-
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -30,6 +28,11 @@ export default async function Home() {
             <div key={instrument.id}>{instrument.name}</div>
           ))}</div>
 
+          <div>
+            ================================
+          </div>
+
+          <DatagridClient rows={instruments} />
 
           <Button variant="contained" endIcon={<SendIcon />}>Click me</Button>
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
