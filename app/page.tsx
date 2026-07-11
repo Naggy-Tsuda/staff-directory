@@ -7,8 +7,8 @@ import DatagridClient from "@/components/list/DatagridClient";
 export default async function Home() {
 
   const supabase = await createClient();
-  const { data: instruments } = await supabase.from('instruments').select('*');
-  console.log("🚀 ~ Home ~ data:", instruments);
+  const { data: staffList } = await supabase.from('staff').select('*');
+  console.log("🚀 ~ Home ~ data:", staffList);
 
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -24,15 +24,15 @@ export default async function Home() {
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
 
 
-          <div>{instruments?.map(instrument => (
-            <div key={instrument.id}>{instrument.name}</div>
+          <div>{staffList?.map(staff => (
+            <div key={staff.id}>{staff.name}</div>
           ))}</div>
 
           <div>
             ================================
           </div>
 
-          <DatagridClient rows={instruments} />
+          <DatagridClient rows={staffList} />
 
           <Button variant="contained" endIcon={<SendIcon />}>Click me</Button>
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
