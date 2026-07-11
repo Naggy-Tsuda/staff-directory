@@ -3,7 +3,8 @@
 import { DataGrid, GridColDef, GridRowsProp } from "@mui/x-data-grid";
 
 const columns: GridColDef[] = [
-  { field: 'name', headerName: 'Instrument Name', width: 200 },
+  { field: 'first_name', headerName: 'Staff Name', width: 200 },
+  { field: 'last_name', headerName: '', width: 200 },
 ];
 
 export default function ({ rows }: any) {
