@@ -1,12 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Button, Paper, Stack, TextField, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { createClient } from "@/lib/supabase/client";
 import { LogoutButton } from "./LogoutButton";
-
-const supabase = createClient();
 
 type Staff = {
   id: number;
@@ -24,17 +22,9 @@ export default function StaffPage() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
-
-  const [isMounted, setIsMounted] = useState(false); // Add this state
-
   const [editingId, setEditingId] = useState<number | null>(null);
 
-  useEffect(() => {
-    setIsMounted(true);
-    loadStaff();
-  }, []);
-
-  async function loadStaff() {
+  const loadStaff = useCallback(async () => {
     const { data, error } = await supabase
       .from("staff")
       .select("*")
@@ -43,7 +33,13 @@ export default function StaffPage() {
     if (!error && data) {
       setRows(data);
     }
-  }
+
+  }, [supabase])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadStaff();
+  }, [loadStaff]);
 
   async function saveStaff() {
     if (editingId === null) {
@@ -146,13 +142,6 @@ export default function StaffPage() {
       ),
     },
   ];
-
-
-  // GUARD - If page not mounded, do nothing
-  // Stop server pre-rendering of the UI elements
-  if (!isMounted) {
-    return null; // Alternatively, return a simple skeleton or loading text
-  }
 
   return (
     <Box sx={{ p: 4 }}>
