@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Box, Button, Paper, Stack, TextField, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { createClient } from "@/lib/supabase/client";
+import { LogoutButton } from "./LogoutButton";
 
 const supabase = createClient();
 
@@ -16,6 +17,7 @@ type Staff = {
 };
 
 export default function StaffPage() {
+  const supabase = useMemo(() => createClient(), []);
   const [rows, setRows] = useState<Staff[]>([]);
 
   const [firstName, setFirstName] = useState("");
@@ -28,7 +30,7 @@ export default function StaffPage() {
   const [editingId, setEditingId] = useState<number | null>(null);
 
   useEffect(() => {
-    setIsMounted(true); // Triggers once running safely in the browser
+    setIsMounted(true);
     loadStaff();
   }, []);
 
@@ -73,14 +75,12 @@ export default function StaffPage() {
       }
     }
 
-    // Clear the form
     setFirstName("");
     setLastName("");
     setEmail("");
     setSubject("");
     setEditingId(null);
 
-    // Reload the grid
     loadStaff();
   }
 
@@ -92,7 +92,6 @@ export default function StaffPage() {
     setSubject(staff.subject);
   }
 
-  // --- NEW DELETE FUNCTION ---
   async function handleDelete(id: number) {
     if (!window.confirm("Are you sure you want to delete this staff member?")) {
       return;
@@ -108,7 +107,6 @@ export default function StaffPage() {
       return;
     }
 
-    // If deleting the item currently being edited, reset the form
     if (editingId === id) {
       setEditingId(null);
       setFirstName("");
@@ -158,6 +156,7 @@ export default function StaffPage() {
 
   return (
     <Box sx={{ p: 4 }}>
+      <LogoutButton />
       <Typography variant="h4" sx={{ mb: 3 }}>
         Staff
       </Typography>
