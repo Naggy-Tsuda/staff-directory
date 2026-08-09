@@ -1,11 +1,23 @@
 'use client'
 
-import { Box, Button, TextField } from "@mui/material";
+import { useActionState } from "react";
+import { Box, Button, Paper, TextField } from "@mui/material";
 import { login, signup } from "./actions";
 
+const initialState: string | null = null;
+
 export default function LoginPage() {
+  const [loginState, loginAction, loginPending] = useActionState(
+    login,
+    initialState,
+  );
+  const [signupState, signupAction, signupPending] = useActionState(
+    signup,
+    initialState,
+  );
+
   return (
-    <>
+    <Paper sx={{ width: 400, p: 8, mx: "auto", mt: 4 }}>
       <h1 style={{ textAlign: "center", fontSize: "32px" }}>
         Login Form
       </h1>
@@ -25,15 +37,16 @@ export default function LoginPage() {
           type="password"
           required
         />
-
-        <Button formAction={login} type="submit" variant="contained">
+        {loginState && <p style={{ color: 'red ' }}>{loginState}</p>}
+        {signupState && <p style={{ color: 'red ' }}>{signupState}</p>}
+        <br />
+        <Button formAction={loginAction} type="submit" variant="contained" disabled={loginPending}>
           Login
         </Button>
-
-        <Button formAction={signup} type="submit" variant="outlined">
+        <Button formAction={signupAction} type="submit" variant="outlined" disabled={signupPending}>
           Sign Up
         </Button>
       </Box>
-    </>
+    </Paper>
   )
 }
