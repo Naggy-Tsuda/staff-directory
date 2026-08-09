@@ -186,6 +186,7 @@ export default function StaffPage() {
         <DataGrid
           rows={rows}
           columns={columns}
+          showToolbar
         />
       </Paper>
     </Box>
