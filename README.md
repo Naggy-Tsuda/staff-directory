@@ -1,36 +1,74 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
 
-First, run the development server:
+# Project Title: Staff Directory
 
+## 📋 Description & Purpose
+This is a staff directory website designed for our school. It serves as a central hub for students to look up all school staff members, including their names, photos, teacher codes, and email addresses. 
+
+The primary users of this website are students, accessing it mainly via desktop web browsers. This outcome benefits student learning and school-wide communication by allowing students to easily locate, identify, and contact their teachers and support staff.
+
+---
+
+## ⚙️ How to Install and Run the Program
+
+### 1. Prerequisites
+This project requires **Node.js** to run. If you do not have it installed, please download the LTS version from [nodejs.org](https://nodejs.org).
+
+### 2. Installation
+You can get the project files using either of the following methods:
+
+**Option A: Clone the repository (Recommended)**
+  Open your terminal and run:
+  ```bash
+  git clone https://github.com/Naggy-Tsuda/staff-directory.git
+  cd staff-directory
+  ```
+
+**Option B: Download the ZIP file**
+  Download and unzip the project folder onto your computer, open your terminal, and navigate into the project folder:
+  ```bash
+  cd /path/to/unzipped/folder
+  ```
+
+Once you are inside the project folder, install the required packages by running:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Running the Server
+Launch the local development server by running one of the following commands:
+```bash
+npm run dev
+```
+Once the server is running, open your web browser and go to:
+👉 **[http://localhost:3000](http://localhost:3000)**
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment Set Up
+Please contact me to get credential values below and user login account.
 
-## Learn More
+```
 
-To learn more about Next.js, take a look at the following resources:
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🕹️ How to Use the Program
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Follow these steps to navigate and test the website features:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 🔑 1. Log In
+Access the platform using the following test account credentials:
+* **Email / Username:** `[Insert your demo username/email here]`
+* **Password:** `[Insert your demo password here]`
+
+### 🔍 2. Explore the Directory
+* **Browse Staff:** Scroll through the directory page to view staff names, email addresses　and subjects.
+* **Search/ Filter:** Use the search bar and filter at the top to find teachers by name or subject.
+* **Add/ Edit:** Add or edit the current staff in the table.
+
+

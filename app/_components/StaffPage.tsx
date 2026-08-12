@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Button, Paper, Stack, TextField, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { createClient } from "@/lib/supabase/client";
-import { LogoutButton } from "./LogoutButton";
 
 type Staff = {
   id: number;
@@ -145,7 +144,6 @@ export default function StaffPage() {
 
   return (
     <Box sx={{ p: 4 }}>
-      <LogoutButton />
       <Typography variant="h4" sx={{ mb: 3 }}>
         Staff
       </Typography>
