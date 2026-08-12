@@ -2,6 +2,8 @@
 
 # Project Title: Staff Directory
 
+<img width="2732" height="2048" alt="Image" src="https://github.com/user-attachments/assets/af780aa2-6ced-4e81-89c9-2bc9b418a4bc" />
+
 ## 📋 Description & Purpose
 This is a staff directory website designed for our school. It serves as a central hub for students to look up all school staff members, including their names, photos, teacher codes, and email addresses. 
 
