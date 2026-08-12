@@ -2,6 +2,11 @@
 
 # Project Title: Staff Directory
 
+<img width="334" height="391" alt="Image" src="https://github.com/user-attachments/assets/26f9fa95-b258-4cef-ba14-670951a2e0d9" />
+
+
+
+
 <img width="2732" height="2048" alt="Image" src="https://github.com/user-attachments/assets/af780aa2-6ced-4e81-89c9-2bc9b418a4bc" />
 
 ## 📋 Description & Purpose
