@@ -1,10 +1,10 @@
-import { createClient } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/server';
 
 export default async function Account() {
-  const supabase = await createClient()
+  const supabase = await createClient();
 
-  const { data } = await supabase.auth.getClaims()
-  const claims = data?.claims ?? null
+  const { data } = await supabase.auth.getClaims();
+  const claims = data?.claims ?? null;
 
   return (
     <div>
@@ -15,5 +15,5 @@ export default async function Account() {
         <button type="submit">Sign out</button>
       </form>
     </div>
-  )
+  );
 }

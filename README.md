@@ -68,12 +68,8 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 
 Follow these steps to navigate and test the website features:
 
-### 🔑 1. Log In
-Access the platform using the following test account credentials:
-* **Email / Username:** `[Insert your demo username/email here]`
-* **Password:** `[Insert your demo password here]`
 
-### 🔍 2. Explore the Directory
+### 🔍 Explore the Directory
 * **Browse Staff:** Scroll through the directory page to view staff names, email addresses　and subjects.
 * **Search/ Filter:** Use the search bar and filter at the top to find teachers by name or subject.
 * **Add/ Edit:** Add or edit the current staff in the table.
