@@ -7,6 +7,8 @@ import { createClient } from '@/lib/supabase/client';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+const MAX_NAME_LENGTH = 20;
+
 type Staff = {
   id: number;
   first_name: string;
@@ -53,14 +55,14 @@ export default function StaffPage() {
 
     if (!firstName.trim()) {
       errors.firstName = 'First name is required';
-    } else if (firstName.length > 10) {
-      errors.firstName = 'First name must be 10 characters or less';
+    } else if (firstName.length > MAX_NAME_LENGTH + 1) {
+      errors.firstName = `First name must be ${MAX_NAME_LENGTH} characters or less`;
     }
 
     if (!lastName.trim()) {
       errors.lastName = 'Last name is required';
-    } else if (lastName.length > 10) {
-      errors.lastName = 'Last name must be 10 characters or less';
+    } else if (lastName.length > MAX_NAME_LENGTH + 1) {
+      errors.lastName = `Last name must be ${MAX_NAME_LENGTH} characters or less`;
     }
 
     if (!email.trim()) {
