@@ -22,6 +22,7 @@ export default function StaffPage() {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   const [editingId, setEditingId] = useState<number | null>(null);
 
   // Fetch staff data from Supabase
@@ -42,7 +43,52 @@ export default function StaffPage() {
     loadStaff();
   }, [loadStaff]);
 
+  function validateForm() {
+    const errors: Record<string, string> = {};
+
+    if (!firstName.trim()) {
+      errors.firstName = "First name is required";
+    }
+
+    if (!lastName.trim()) {
+      errors.lastName = "Last name is required";
+    }
+
+    if (!email.trim()) {
+      errors.email = "Email is required";
+    } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+      errors.email = "Enter a valid email adress";
+    }
+
+    if (!subject.trim()) {
+      errors.subject = "Subject is required";
+    }
+
+    return errors;
+  }
+
+  function handleFieldChange(
+    setter: React.Dispatch<React.SetStateAction<string>>,
+    value: string,
+    field: string,
+  ) {
+    setter(value);
+    if (formErrors[field]) {
+      setFormErrors((prev) => {
+        const next = { ...prev };
+        delete next[field];
+        return next;
+      });
+    }
+  }
+
   async function saveStaff() {
+    const errors = validateForm();
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      return;
+    }
+
     // On Edit staff
     if (editingId === null) {
       const { error } = await supabase.from("staff").insert({
@@ -165,25 +211,33 @@ export default function StaffPage() {
           <TextField
             label="First Name"
             value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            onChange={(e) => handleFieldChange(setFirstName, e.target.value, "firstName")}
+            error={!!formErrors.firstName}
+            helperText={formErrors.firstName}
           />
 
           <TextField
             label="Last Name"
             value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            onChange={(e) => handleFieldChange(setLastName, e.target.value, "lastName")}
+            error={!!formErrors.lastName}
+            helperText={formErrors.lastName}
           />
 
           <TextField
             label="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => handleFieldChange(setEmail, e.target.value, "email")}
+            error={!!formErrors.email}
+            helperText={formErrors.email}
           />
 
           <TextField
             label="Subject"
             value={subject}
-            onChange={(e) => setSubject(e.target.value)}
+            onChange={(e) => handleFieldChange(setSubject, e.target.value, "subject")}
+            error={!!formErrors.subject}
+            helperText={formErrors.subject}
           />
 
           <Button variant="contained" onClick={saveStaff}>
