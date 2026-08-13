@@ -18,6 +18,7 @@ export default function StaffPage() {
   const supabase = useMemo(() => createClient(), []);
   const [rows, setRows] = useState<Staff[]>([]);
 
+  const [isSaving, setIsSaving] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -83,53 +84,65 @@ export default function StaffPage() {
   }
 
   async function saveStaff() {
+    if (isSaving) {
+      return;
+    }
     const errors = validateForm();
     setFormErrors(errors);
     if (Object.keys(errors).length > 0) {
       return;
     }
 
-    // On Edit staff
-    if (editingId === null) {
-      const { error } = await supabase.from("staff").insert({
-        first_name: firstName,
-        last_name: lastName,
-        email: email,
-        subject: subject,
-      });
+    setIsSaving(true)
 
-      // Display error when Supabase failed
-      if (error) {
-        alert(error.message);
-        return;
-      }
-      // On Add new staff
-    } else {
-      const { error } = await supabase
-        .from("staff")
-        .update({
+    try {
+
+      // On Edit staff
+      if (editingId === null) {
+        const { error } = await supabase.from("staff").insert({
           first_name: firstName,
           last_name: lastName,
           email: email,
           subject: subject,
-        })
-        .eq("id", editingId);
+        });
 
-      // Display error when Supabase failed
-      if (error) {
-        alert(error.message);
-        return;
+        // Display error when Supabase failed
+        if (error) {
+          alert(error.message);
+          return;
+        }
+        // On Add new staff
+      } else {
+        const { error } = await supabase
+          .from("staff")
+          .update({
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            subject: subject,
+          })
+          .eq("id", editingId);
+
+        // Display error when Supabase failed
+        if (error) {
+          alert(error.message);
+          return;
+        }
       }
+
+      // Reset form after saving
+      setFirstName("");
+      setLastName("");
+      setEmail("");
+      setSubject("");
+      setEditingId(null);
+
+      loadStaff();
+    } catch (_error) {
+      alert("Something went wrong.")
+    } finally {
+      setIsSaving(false)
     }
-
-    // Reset form after saving
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setSubject("");
-    setEditingId(null);
-
-    loadStaff();
   }
 
   // Set staff details to form state
