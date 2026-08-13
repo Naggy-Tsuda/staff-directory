@@ -150,7 +150,7 @@ export default function StaffPage() {
 
       // Refresh the table so we can see the new/ updated person
       loadStaff();
-    } catch (_error) {
+    } catch {
       alert("Something went wrong.")
     } finally {
       // Always let the button be clickable again
@@ -199,7 +199,6 @@ export default function StaffPage() {
 
   // The columns shown in the table
   const columns: GridColDef[] = [
-    { field: "id", headerName: "ID", width: 80 },
     { field: "first_name", headerName: "First Name", flex: 1 },
     { field: "last_name", headerName: "Last Name", flex: 1 },
     { field: "email", headerName: "Email", flex: 1.5 },
