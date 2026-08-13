@@ -4,6 +4,8 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
+const MIN_PASSWORD_LENGTH = 8
+
 export async function login(
   prevState: string | null,
   formData: FormData,
@@ -13,6 +15,10 @@ export async function login(
   const data = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
+  }
+
+  if (data.password.length < MIN_PASSWORD_LENGTH + 1) {
+    return `Password must be greater than ${MIN_PASSWORD_LENGTH} characters`
   }
 
   const { error } = await supabase.auth.signInWithPassword(data)
@@ -34,6 +40,10 @@ export async function signup(
   const data = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
+  }
+
+  if (data.password.length < MIN_PASSWORD_LENGTH + 1) {
+    return `Password must be greater than ${MIN_PASSWORD_LENGTH} characters`
   }
 
   const { error } = await supabase.auth.signUp(data)
