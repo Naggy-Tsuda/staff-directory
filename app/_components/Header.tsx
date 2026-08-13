@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography"
 import { LogoutButton } from "./LogoutButton"
 import { createClient } from "@/lib/supabase/server"
 
-
+// Top bar runs on server so it can check who is logged in
 export default async function Header() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
