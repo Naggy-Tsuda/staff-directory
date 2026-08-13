@@ -10,10 +10,12 @@ export default async function Header() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
+  // Hide Header if user is not logged in yet
   if (!user) {
     return null
   }
 
+  // Display header only if user is logged in
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">

@@ -5,7 +5,7 @@ import { type NextRequest, NextResponse } from 'next/server'
 export async function POST(req: NextRequest) {
   const supabase = await createClient()
 
-  // Check if a user's logged in
+  // Check if user is logged in
   const { data: claimsData } = await supabase.auth.getClaims()
 
   if (claimsData?.claims) {

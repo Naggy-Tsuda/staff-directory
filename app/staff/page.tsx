@@ -4,8 +4,5 @@ import StaffPage from "../_components/StaffPage";
 export default async function Page() {
   await connection();
 
-  return <>
-    <StaffPage />
-  </>
-    ;
+  return <StaffPage />;
 }

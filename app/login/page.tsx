@@ -27,17 +27,19 @@ export default function LoginPage() {
       >
         <TextField
           label="Email"
-          name="email" // Required for Server Actions to read the value
+          name="email"
           type="email"
           required
         />
         <TextField
           label="Password"
-          name="password" // Required for Server Actions to read the value
+          name="password"
           type="password"
           required
         />
+        {/* Error when login failed */}
         {loginState && <p style={{ color: 'red ' }}>{loginState}</p>}
+        {/* Error when signup failed */}
         {signupState && <p style={{ color: 'red ' }}>{signupState}</p>}
         <br />
         <Button formAction={loginAction} type="submit" variant="contained" disabled={loginPending}>

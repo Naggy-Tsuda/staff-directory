@@ -2,6 +2,7 @@
 
 import { createTheme } from "@mui/material/styles";
 
+// Create theme to match school colours
 const theme = createTheme({
   palette: {
     primary: { main: "#0B1B3D" },

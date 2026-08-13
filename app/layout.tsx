@@ -34,6 +34,7 @@ export default function RootLayout({
       <AppRouterCacheProvider>
         <ThemeProvider theme={theme}>
           <body className="min-h-full flex flex-col">
+            {/* Set header here to display all pages */}
             <Header />
             {children}
           </body>
