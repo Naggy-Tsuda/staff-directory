@@ -1,18 +1,18 @@
-import AppBar from "@mui/material/AppBar"
-import Box from "@mui/material/Box"
-import Toolbar from "@mui/material/Toolbar"
-import Typography from "@mui/material/Typography"
-import { LogoutButton } from "./LogoutButton"
-import { createClient } from "@/lib/supabase/server"
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import { LogoutButton } from './LogoutButton';
+import { createClient } from '@/lib/supabase/server';
 
 // Top bar runs on server so it can check who is logged in
 export default async function Header() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
 
   // Hide Header if user is not logged in yet
   if (!user) {
-    return null
+    return null;
   }
 
   // Display header only if user is logged in
@@ -27,5 +27,5 @@ export default async function Header() {
         </Toolbar>
       </AppBar>
     </Box>
-  )
+  );
 }

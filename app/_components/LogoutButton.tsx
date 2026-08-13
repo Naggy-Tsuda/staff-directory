@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client';
 
 export function LogoutButton() {
-  const supabase = createClient()
+  const supabase = createClient();
   async function onLogout() {
-    await supabase.auth.signOut()
-    window.location.href = '/login'
+    await supabase.auth.signOut();
+    window.location.href = '/login';
   }
 
-  return <button onClick={onLogout}>Log out</button>
+  return <button onClick={onLogout}>Log out</button>;
 }

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { Box, Button, Paper, Stack, TextField, Typography } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { createClient } from "@/lib/supabase/client";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { createClient } from '@/lib/supabase/client';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -21,10 +21,10 @@ export default function StaffPage() {
   const [rows, setRows] = useState<Staff[]>([]);
 
   const [isSaving, setIsSaving] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [subject, setSubject] = useState("");
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [subject, setSubject] = useState('');
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
   // When this is number we are editing that person
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -32,15 +32,15 @@ export default function StaffPage() {
   // Fetch staff data from Supabase
   const loadStaff = useCallback(async () => {
     const { data, error } = await supabase
-      .from("staff")
-      .select("*")
-      .order("id");
+      .from('staff')
+      .select('*')
+      .order('id');
 
     if (!error && data) {
       setRows(data);
     }
 
-  }, [supabase])
+  }, [supabase]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -52,25 +52,25 @@ export default function StaffPage() {
     const errors: Record<string, string> = {};
 
     if (!firstName.trim()) {
-      errors.firstName = "First name is required";
+      errors.firstName = 'First name is required';
     } else if (firstName.length > 10) {
-      errors.firstName = "First name must be 10 characters or less"
+      errors.firstName = 'First name must be 10 characters or less';
     }
 
     if (!lastName.trim()) {
-      errors.lastName = "Last name is required";
+      errors.lastName = 'Last name is required';
     } else if (lastName.length > 10) {
-      errors.lastName = "Last name must be 10 characters or less"
+      errors.lastName = 'Last name must be 10 characters or less';
     }
 
     if (!email.trim()) {
-      errors.email = "Email is required";
+      errors.email = 'Email is required';
     } else if (!/^\S+@\S+\.\S+$/.test(email)) {
-      errors.email = "Enter a valid email adress";
+      errors.email = 'Enter a valid email adress';
     }
 
     if (!subject.trim()) {
-      errors.subject = "Subject is required";
+      errors.subject = 'Subject is required';
     }
 
     return errors;
@@ -106,13 +106,13 @@ export default function StaffPage() {
       return;
     }
 
-    setIsSaving(true)
+    setIsSaving(true);
 
     try {
 
       // No editingId means we are adding a brand new person
       if (editingId === null) {
-        const { error } = await supabase.from("staff").insert({
+        const { error } = await supabase.from('staff').insert({
           first_name: firstName,
           last_name: lastName,
           email: email,
@@ -126,14 +126,14 @@ export default function StaffPage() {
       } else {
         // editingId is set, so we update that person instead
         const { error } = await supabase
-          .from("staff")
+          .from('staff')
           .update({
             first_name: firstName,
             last_name: lastName,
             email: email,
             subject: subject,
           })
-          .eq("id", editingId);
+          .eq('id', editingId);
 
         if (error) {
           alert(error.message);
@@ -142,19 +142,19 @@ export default function StaffPage() {
       }
 
       // Clear the form so it's ready for the next person
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setSubject("");
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setSubject('');
       setEditingId(null);
 
       // Refresh the table so we can see the new/ updated person
       loadStaff();
     } catch {
-      alert("Something went wrong.")
+      alert('Something went wrong.');
     } finally {
       // Always let the button be clickable again
-      setIsSaving(false)
+      setIsSaving(false);
     }
   }
 
@@ -170,14 +170,14 @@ export default function StaffPage() {
   // Deletes a person but asks first just in case
   async function handleDelete(id: number) {
     // Display confirmation message
-    if (!window.confirm("Are you sure you want to delete this staff member?")) {
+    if (!window.confirm('Are you sure you want to delete this staff member?')) {
       return;
     }
 
     const { error } = await supabase
-      .from("staff")
+      .from('staff')
       .delete()
-      .eq("id", id);
+      .eq('id', id);
 
     // Display error if Supabase failed
     if (error) {
@@ -188,10 +188,10 @@ export default function StaffPage() {
     // If we were editing the person we deleted, clear the form
     if (editingId === id) {
       setEditingId(null);
-      setFirstName("");
-      setLastName("");
-      setEmail("");
-      setSubject("");
+      setFirstName('');
+      setLastName('');
+      setEmail('');
+      setSubject('');
     }
 
     loadStaff();
@@ -199,13 +199,13 @@ export default function StaffPage() {
 
   // The columns shown in the table
   const columns: GridColDef[] = [
-    { field: "first_name", headerName: "First Name", flex: 1 },
-    { field: "last_name", headerName: "Last Name", flex: 1 },
-    { field: "email", headerName: "Email", flex: 1.5 },
-    { field: "subject", headerName: "Subject", flex: 1.5 },
+    { field: 'first_name', headerName: 'First Name', flex: 1 },
+    { field: 'last_name', headerName: 'Last Name', flex: 1 },
+    { field: 'email', headerName: 'Email', flex: 1.5 },
+    { field: 'subject', headerName: 'Subject', flex: 1.5 },
     {
-      field: "edit",
-      headerName: "",
+      field: 'edit',
+      headerName: '',
       width: 120,
       // The edit button for each row
       renderCell: (params) => (
@@ -215,8 +215,8 @@ export default function StaffPage() {
       ),
     },
     {
-      field: "delete",
-      headerName: "",
+      field: 'delete',
+      headerName: '',
       width: 120,
       // The delete buttons for each row
       renderCell: (params) => (
@@ -239,7 +239,7 @@ export default function StaffPage() {
           <TextField
             label="First Name"
             value={firstName}
-            onChange={(e) => handleFieldChange(setFirstName, e.target.value, "firstName")}
+            onChange={(e) => handleFieldChange(setFirstName, e.target.value, 'firstName')}
             error={!!formErrors.firstName}
             helperText={formErrors.firstName}
           />
@@ -247,7 +247,7 @@ export default function StaffPage() {
           <TextField
             label="Last Name"
             value={lastName}
-            onChange={(e) => handleFieldChange(setLastName, e.target.value, "lastName")}
+            onChange={(e) => handleFieldChange(setLastName, e.target.value, 'lastName')}
             error={!!formErrors.lastName}
             helperText={formErrors.lastName}
           />
@@ -255,7 +255,7 @@ export default function StaffPage() {
           <TextField
             label="Email"
             value={email}
-            onChange={(e) => handleFieldChange(setEmail, e.target.value, "email")}
+            onChange={(e) => handleFieldChange(setEmail, e.target.value, 'email')}
             error={!!formErrors.email}
             helperText={formErrors.email}
           />
@@ -263,13 +263,13 @@ export default function StaffPage() {
           <TextField
             label="Subject"
             value={subject}
-            onChange={(e) => handleFieldChange(setSubject, e.target.value, "subject")}
+            onChange={(e) => handleFieldChange(setSubject, e.target.value, 'subject')}
             error={!!formErrors.subject}
             helperText={formErrors.subject}
           />
 
           <Button variant="contained" onClick={saveStaff}>
-            {editingId === null ? "Add Staff" : "Update Staff"}
+            {editingId === null ? 'Add Staff' : 'Update Staff'}
           </Button>
         </Stack>
       </Paper>

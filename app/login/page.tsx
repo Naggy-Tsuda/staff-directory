@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import { useActionState } from "react";
-import { Box, Button, Paper, TextField } from "@mui/material";
-import { login, signup } from "./actions";
+import { useActionState } from 'react';
+import { Box, Button, Paper, TextField } from '@mui/material';
+import { login, signup } from './actions';
 
 const initialState: string | null = null;
 
@@ -18,8 +18,8 @@ export default function LoginPage() {
   );
 
   return (
-    <Paper sx={{ width: 400, p: 8, mx: "auto", mt: 4 }}>
-      <h1 style={{ textAlign: "center", fontSize: "32px" }}>
+    <Paper sx={{ width: 400, p: 8, mx: 'auto', mt: 4 }}>
+      <h1 style={{ textAlign: 'center', fontSize: '32px' }}>
         Login Form
       </h1>
       {/* Show the error message if login/ signup failed */}
@@ -52,5 +52,5 @@ export default function LoginPage() {
         </Button>
       </Box>
     </Paper>
-  )
+  );
 }
