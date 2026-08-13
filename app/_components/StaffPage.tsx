@@ -4,6 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Box, Button, Paper, Stack, TextField, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { createClient } from "@/lib/supabase/client";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type Staff = {
   id: number;
@@ -193,9 +195,9 @@ export default function StaffPage() {
     {
       field: "edit",
       headerName: "",
-      width: 100,
+      width: 120,
       renderCell: (params) => (
-        <Button onClick={() => editStaff(params.row)}>
+        <Button onClick={() => editStaff(params.row)} startIcon={<EditIcon />}>
           Edit
         </Button>
       ),
@@ -203,9 +205,9 @@ export default function StaffPage() {
     {
       field: "delete",
       headerName: "",
-      width: 100,
+      width: 120,
       renderCell: (params) => (
-        <Button color="error" onClick={() => handleDelete(params.row.id)}>
+        <Button color="error" onClick={() => handleDelete(params.row.id)} startIcon={<DeleteIcon />}>
           Delete
         </Button>
       ),
