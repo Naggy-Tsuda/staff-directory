@@ -7,6 +7,7 @@ import { login, signup } from "./actions";
 const initialState: string | null = null;
 
 export default function LoginPage() {
+  // useActionState gives us the result of the server action and if it's pending
   const [loginState, loginAction, loginPending] = useActionState(
     login,
     initialState,
@@ -21,6 +22,7 @@ export default function LoginPage() {
       <h1 style={{ textAlign: "center", fontSize: "32px" }}>
         Login Form
       </h1>
+      {/* Show the error message if login/ signup failed */}
       <Box
         component="form"
         sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: 300, margin: 'auto', mt: 4 }}

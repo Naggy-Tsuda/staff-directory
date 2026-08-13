@@ -26,6 +26,7 @@ export default function StaffPage() {
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
+  // When this is number we are editing that person
   const [editingId, setEditingId] = useState<number | null>(null);
 
   // Fetch staff data from Supabase
@@ -46,6 +47,7 @@ export default function StaffPage() {
     loadStaff();
   }, [loadStaff]);
 
+  // Checks if form is filled in right, returns errors
   function validateForm() {
     const errors: Record<string, string> = {};
 
@@ -74,6 +76,7 @@ export default function StaffPage() {
     return errors;
   }
 
+  // When the user types save it and hide that box's error message
   function handleFieldChange(
     setter: React.Dispatch<React.SetStateAction<string>>,
     value: string,
@@ -89,10 +92,14 @@ export default function StaffPage() {
     }
   }
 
+  // Add a new person or updates the person we are editing
   async function saveStaff() {
+    // Stops us if we are already editing (so no double clicks)
     if (isSaving) {
       return;
     }
+
+    // If the form is wrong, show the errors and stop
     const errors = validateForm();
     setFormErrors(errors);
     if (Object.keys(errors).length > 0) {
@@ -103,7 +110,7 @@ export default function StaffPage() {
 
     try {
 
-      // On Edit staff
+      // No editingId means we are adding a brand new person
       if (editingId === null) {
         const { error } = await supabase.from("staff").insert({
           first_name: firstName,
@@ -112,13 +119,12 @@ export default function StaffPage() {
           subject: subject,
         });
 
-        // Display error when Supabase failed
         if (error) {
           alert(error.message);
           return;
         }
-        // On Add new staff
       } else {
+        // editingId is set, so we update that person instead
         const { error } = await supabase
           .from("staff")
           .update({
@@ -129,29 +135,30 @@ export default function StaffPage() {
           })
           .eq("id", editingId);
 
-        // Display error when Supabase failed
         if (error) {
           alert(error.message);
           return;
         }
       }
 
-      // Reset form after saving
+      // Clear the form so it's ready for the next person
       setFirstName("");
       setLastName("");
       setEmail("");
       setSubject("");
       setEditingId(null);
 
+      // Refresh the table so we can see the new/ updated person
       loadStaff();
     } catch (_error) {
       alert("Something went wrong.")
     } finally {
+      // Always let the button be clickable again
       setIsSaving(false)
     }
   }
 
-  // Set staff details to form state
+  // Fill the form with the person's info when we click edit
   function editStaff(staff: Staff) {
     setEditingId(staff.id);
     setFirstName(staff.first_name);
@@ -160,6 +167,7 @@ export default function StaffPage() {
     setSubject(staff.subject);
   }
 
+  // Deletes a person but asks first just in case
   async function handleDelete(id: number) {
     // Display confirmation message
     if (!window.confirm("Are you sure you want to delete this staff member?")) {
@@ -177,7 +185,7 @@ export default function StaffPage() {
       return;
     }
 
-    // Reset form after deletion
+    // If we were editing the person we deleted, clear the form
     if (editingId === id) {
       setEditingId(null);
       setFirstName("");
@@ -189,7 +197,7 @@ export default function StaffPage() {
     loadStaff();
   }
 
-  // Table column definition
+  // The columns shown in the table
   const columns: GridColDef[] = [
     { field: "id", headerName: "ID", width: 80 },
     { field: "first_name", headerName: "First Name", flex: 1 },
@@ -200,6 +208,7 @@ export default function StaffPage() {
       field: "edit",
       headerName: "",
       width: 120,
+      // The edit button for each row
       renderCell: (params) => (
         <Button onClick={() => editStaff(params.row)} startIcon={<EditIcon />}>
           Edit
@@ -210,6 +219,7 @@ export default function StaffPage() {
       field: "delete",
       headerName: "",
       width: 120,
+      // The delete buttons for each row
       renderCell: (params) => (
         <Button color="error" onClick={() => handleDelete(params.row.id)} startIcon={<DeleteIcon />}>
           Delete
