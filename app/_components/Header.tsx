@@ -2,6 +2,7 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import Image from 'next/image';
 import { LogoutButton } from './LogoutButton';
 import { createClient } from '@/lib/supabase/server';
 
@@ -20,9 +21,13 @@ export default async function Header() {
     <Box sx={{ width: '100%' }}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Staff Directory
-          </Typography>
+          {/* Logo */}
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexGrow: 1 }}>
+            <Image src="/logo.png" alt="Logo" width={32} height={24} priority />
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              Staff Directory
+            </Typography>
+          </Box>
           <LogoutButton />
         </Toolbar>
       </AppBar>
