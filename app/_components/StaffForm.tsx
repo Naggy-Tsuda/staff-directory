@@ -1,11 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { createClient } from '@/lib/supabase/client';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import { useRouter } from 'next/navigation';
 
 const MAX_NAME_LENGTH = 20;
 
@@ -17,37 +15,27 @@ type Staff = {
   subject: string;
 };
 
-export default function StaffPage() {
+type StaffFormProps = {
+  mode: 'new' | 'edit';
+  editingId?: number;
+  initialStaff?: Staff | null
+}
+
+export default function StaffForm({
+  mode,
+  editingId,
+  initialStaff,
+}: StaffFormProps) {
   // Create supabase instance to use supabase functions
   const supabase = useMemo(() => createClient(), []);
-  const [rows, setRows] = useState<Staff[]>([]);
+  const router = useRouter();
 
   const [isSaving, setIsSaving] = useState(false);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('');
+  const [firstName, setFirstName] = useState(initialStaff?.first_name ?? '');
+  const [lastName, setLastName] = useState(initialStaff?.last_name ?? '');
+  const [email, setEmail] = useState(initialStaff?.email ?? '');
+  const [subject, setSubject] = useState(initialStaff?.subject ?? '');
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
-  // When this is number we are editing that person
-  const [editingId, setEditingId] = useState<number | null>(null);
-
-  // Fetch staff data from Supabase
-  const loadStaff = useCallback(async () => {
-    const { data, error } = await supabase
-      .from('staff')
-      .select('*')
-      .order('id');
-
-    if (!error && data) {
-      setRows(data);
-    }
-
-  }, [supabase]);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    loadStaff();
-  }, [loadStaff]);
 
   // Checks if form is filled in right, returns errors
   function validateForm() {
@@ -113,7 +101,7 @@ export default function StaffPage() {
     try {
 
       // No editingId means we are adding a brand new person
-      if (editingId === null) {
+      if (mode === 'new') {
         const { error } = await supabase.from('staff').insert({
           first_name: firstName,
           last_name: lastName,
@@ -143,15 +131,9 @@ export default function StaffPage() {
         }
       }
 
-      // Clear the form so it's ready for the next person
-      setFirstName('');
-      setLastName('');
-      setEmail('');
-      setSubject('');
-      setEditingId(null);
-
       // Refresh the table so we can see the new/ updated person
-      loadStaff();
+      router.push('/staff');
+      router.refresh();
     } catch {
       alert('Something went wrong.');
     } finally {
@@ -160,79 +142,10 @@ export default function StaffPage() {
     }
   }
 
-  // Fill the form with the person's info when we click edit
-  function editStaff(staff: Staff) {
-    setEditingId(staff.id);
-    setFirstName(staff.first_name);
-    setLastName(staff.last_name);
-    setEmail(staff.email);
-    setSubject(staff.subject);
-  }
-
-  // Deletes a person but asks first just in case
-  async function handleDelete(id: number) {
-    // Display confirmation message
-    if (!window.confirm('Are you sure you want to delete this staff member?')) {
-      return;
-    }
-
-    const { error } = await supabase
-      .from('staff')
-      .delete()
-      .eq('id', id);
-
-    // Display error if Supabase failed
-    if (error) {
-      alert(error.message);
-      return;
-    }
-
-    // If we were editing the person we deleted, clear the form
-    if (editingId === id) {
-      setEditingId(null);
-      setFirstName('');
-      setLastName('');
-      setEmail('');
-      setSubject('');
-    }
-
-    loadStaff();
-  }
-
-  // The columns shown in the table
-  const columns: GridColDef[] = [
-    { field: 'first_name', headerName: 'First Name', flex: 1 },
-    { field: 'last_name', headerName: 'Last Name', flex: 1 },
-    { field: 'email', headerName: 'Email', flex: 1.5 },
-    { field: 'subject', headerName: 'Subject', flex: 1.5 },
-    {
-      field: 'edit',
-      headerName: '',
-      width: 120,
-      // The edit button for each row
-      renderCell: (params) => (
-        <Button onClick={() => editStaff(params.row)} startIcon={<EditIcon />}>
-          Edit
-        </Button>
-      ),
-    },
-    {
-      field: 'delete',
-      headerName: '',
-      width: 120,
-      // The delete buttons for each row
-      renderCell: (params) => (
-        <Button color="error" onClick={() => handleDelete(params.row.id)} startIcon={<DeleteIcon />}>
-          Delete
-        </Button>
-      ),
-    },
-  ];
-
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h4" sx={{ mb: 3 }}>
-        Staff
+        {mode === 'new' ? 'Add Staff' : 'Edit Staff'}
       </Typography>
 
       {/* Form section */}
@@ -271,19 +184,13 @@ export default function StaffPage() {
           />
 
           <Button variant="contained" onClick={saveStaff}>
-            {editingId === null ? 'Add Staff' : 'Update Staff'}
+            {mode === 'new' ? 'Add Staff' : 'Update Staff'}
+          </Button>
+
+          <Button variant="outlined" onClick={() => router.push('/staff')}>
+            Back to list
           </Button>
         </Stack>
-      </Paper>
-
-
-      {/* Table section */}
-      <Paper sx={{ height: 400 }}>
-        <DataGrid
-          rows={rows}
-          columns={columns}
-          showToolbar
-        />
       </Paper>
     </Box>
   );
