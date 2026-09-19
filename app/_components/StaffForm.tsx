@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Paper, Stack, TextField, Typography } from '@mui/material';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 
@@ -13,6 +13,7 @@ type Staff = {
   last_name: string;
   email: string;
   subject: string;
+  avatar_url: string | null;
 };
 
 type StaffFormProps = {
@@ -35,6 +36,8 @@ export default function StaffForm({
   const [lastName, setLastName] = useState(initialStaff?.last_name ?? '');
   const [email, setEmail] = useState(initialStaff?.email ?? '');
   const [subject, setSubject] = useState(initialStaff?.subject ?? '');
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState(initialStaff?.avatar_url ?? '');
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   // Checks if form is filled in right, returns errors
@@ -43,13 +46,13 @@ export default function StaffForm({
 
     if (!firstName.trim()) {
       errors.firstName = 'First name is required';
-    } else if (firstName.length > MAX_NAME_LENGTH + 1) {
+    } else if (firstName.length > MAX_NAME_LENGTH) {
       errors.firstName = `First name must be ${MAX_NAME_LENGTH} characters or less`;
     }
 
     if (!lastName.trim()) {
       errors.lastName = 'Last name is required';
-    } else if (lastName.length > MAX_NAME_LENGTH + 1) {
+    } else if (lastName.length > MAX_NAME_LENGTH) {
       errors.lastName = `Last name must be ${MAX_NAME_LENGTH} characters or less`;
     }
 
@@ -82,6 +85,16 @@ export default function StaffForm({
     }
   }
 
+  function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    setAvatarFile(file);
+    setAvatarPreview(file.type.startsWith('image/') ? URL.createObjectURL(file) : '');
+  }
+
   // Add a new person or updates the person we are editing
   async function saveStaff() {
     // Stops us if we are already editing (so no double clicks)
@@ -99,6 +112,24 @@ export default function StaffForm({
     setIsSaving(true);
 
     try {
+      let newAvatarUrl = initialStaff?.avatar_url ?? null;
+
+      if (avatarFile) {
+        const path = `${Date.now()}-${avatarFile.name}`;
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(path, avatarFile);
+
+        if (uploadError) {
+          alert(uploadError.message);
+          return;
+        }
+
+        newAvatarUrl = supabase.storage
+          .from('avatars')
+          .getPublicUrl(path)
+          .data.publicUrl;
+      }
 
       // No editingId means we are adding a brand new person
       if (mode === 'new') {
@@ -107,6 +138,7 @@ export default function StaffForm({
           last_name: lastName,
           email: email,
           subject: subject,
+          avatar_url: newAvatarUrl,
         });
 
         if (error) {
@@ -122,6 +154,7 @@ export default function StaffForm({
             last_name: lastName,
             email: email,
             subject: subject,
+            avatar_url: newAvatarUrl,
           })
           .eq('id', editingId);
 
@@ -151,6 +184,19 @@ export default function StaffForm({
       {/* Form section */}
       <Paper sx={{ p: 3, mb: 3 }}>
         <Stack spacing={2}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <Avatar src={avatarPreview || undefined} sx={{ width: 64, height: 64 }} />
+            <Button component='label' variant='outlined'>
+              Choose Avatar
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={handleAvatarChange}
+              />
+            </Button>
+          </Box>
+
           <TextField
             label="First Name"
             value={firstName}
