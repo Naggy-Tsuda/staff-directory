@@ -1,8 +1,9 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Box, Button, Paper, TextField } from '@mui/material';
+import { Box, Button, Paper, TextField, Typography } from '@mui/material';
 import { login, signup } from './actions';
+import Link from 'next/link';
 
 const initialState: string | null = null;
 
@@ -47,6 +48,9 @@ export default function LoginPage() {
         <Button formAction={loginAction} type="submit" variant="contained" disabled={loginPending}>
           Login
         </Button>
+        <Typography variant="body2" sx={{ textAlign: 'center' }}>
+          <Link href="/forgot-password">Forgot password?</Link>
+        </Typography>
         <Button formAction={signupAction} type="submit" variant="outlined" disabled={signupPending}>
           Sign Up
         </Button>
