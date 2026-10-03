@@ -4,7 +4,13 @@ import { updateSession } from './lib/supabase/proxy';
 export async function proxy(request: NextRequest) {
   const { user, response } = await updateSession(request);
 
-  if (!user && request.nextUrl.pathname !== '/login') {
+  // URL for not logged in users
+  const isPublicPath =
+    request.nextUrl.pathname === '/login' ||
+    request.nextUrl.pathname === '/forgot-password' ||
+    request.nextUrl.pathname.startsWith('/auth/callback');
+
+  if (!user && !isPublicPath) {
     return Response.redirect(new URL('/login', request.url));
   }
 
