@@ -13,10 +13,14 @@ type UserRow = {
 export default function UsersList() {
   const supabase = useMemo(() => createClient(), []);
   const [rows, setRows] = useState<UserRow[]>([]);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
   const loadUsers = useCallback(async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    setCurrentUserId(user?.id ?? null);
+
     // authorisation lives in the DB function, a non-admin call returns an error
     const { data, error } = await supabase.rpc('get_all_users');
 
@@ -76,10 +80,10 @@ export default function UsersList() {
             <Select
               value={row.role}
               size="small"
-              disabled={isUpdating}
+              disabled={isUpdating || row.user_id === currentUserId}
               onChange={(e) => handleRoleChange(row, e.target.value)}
             >
-              <MenuItem value="standard_users">Standard Users</MenuItem>
+              <MenuItem value="standard_user">Standard User</MenuItem>
               <MenuItem value="admin">Admin</MenuItem>
             </Select>
           </Box>
