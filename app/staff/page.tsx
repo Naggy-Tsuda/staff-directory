@@ -1,8 +1,12 @@
 import { connection } from 'next/server';
-import StaffPage from '../_components/StaffList';
+import StaffList from '../_components/StaffList';
+import { isCurrentUserAdmin } from '@/lib/supabase/auth';
+
 
 export default async function Page() {
   await connection();
 
-  return <StaffPage />;
+  const isAdmin = await isCurrentUserAdmin();
+
+  return <StaffList canEdit={isAdmin} />;;
 }

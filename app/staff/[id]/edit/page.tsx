@@ -1,7 +1,8 @@
 import StaffForm from '@/app/_components/StaffForm';
 import { createClient } from '@/lib/supabase/server';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { connection } from 'next/server';
+import { isCurrentUserAdmin } from '@/lib/supabase/auth';
 
 type EditStaffPageProps = {
   params: Promise<{ id: string }>;
@@ -9,6 +10,10 @@ type EditStaffPageProps = {
 
 export default async function EditStaffPage({ params }: EditStaffPageProps) {
   await connection();
+
+  if (!(await isCurrentUserAdmin())) {
+    redirect('/staff');
+  }
 
   const { id } = await params;
   const supabase = await createClient();

@@ -17,8 +17,10 @@ type Staff = {
   avatar_url: string | null;
 };
 
-export default function StaffList() {
-  // Create supabase instance to use supabase functions
+export default function StaffList({ canEdit }: {
+  canEdit:
+  boolean
+}) {  // Create supabase instance to use supabase functions
   const supabase = useMemo(() => createClient(), []);
   const router = useRouter();
   const [rows, setRows] = useState<Staff[]>([]);
@@ -65,19 +67,7 @@ export default function StaffList() {
   }
 
   // The columns shown in the table
-  const columns: GridColDef[] = [
-    {
-      field: 'avatar_url',
-      headerName: 'Avatar',
-      width: 80,
-      renderCell: (params) => (
-        <Avatar src={params.row.avatar_url ?? undefined} />
-      ),
-    },
-    { field: 'first_name', headerName: 'First Name', flex: 1 },
-    { field: 'last_name', headerName: 'Last Name', flex: 1 },
-    { field: 'email', headerName: 'Email', flex: 1.5 },
-    { field: 'subject', headerName: 'Subject', flex: 1.5 },
+  const actionColumns: GridColDef[] = [
     {
       field: 'edit',
       headerName: '',
@@ -103,6 +93,22 @@ export default function StaffList() {
     },
   ];
 
+  const columns: GridColDef[] = [
+    {
+      field: 'avatar_url',
+      headerName: 'Avatar',
+      width: 80,
+      renderCell: (params) => (
+        <Avatar src={params.row.avatar_url ?? undefined} />
+      ),
+    },
+    { field: 'first_name', headerName: 'First Name', flex: 1 },
+    { field: 'last_name', headerName: 'Last Name', flex: 1 },
+    { field: 'email', headerName: 'Email', flex: 1.5 },
+    { field: 'subject', headerName: 'Subject', flex: 1.5 },
+    ...(canEdit ? actionColumns : []),
+  ];
+
   if (!isMounted) {
     return null;
   }
@@ -113,9 +119,11 @@ export default function StaffList() {
         <Typography variant="h4" sx={{ mb: 3 }}>
           Staff
         </Typography>
-        <Button variant="contained" onClick={() => router.push('/staff/new')}>
-          Add Staff
-        </Button>
+        {canEdit && (
+          <Button variant="contained" onClick={() => router.push('/staff/new')}>
+            Add Staff
+          </Button>
+        )}
       </Box>
 
       {/* Table section */}
