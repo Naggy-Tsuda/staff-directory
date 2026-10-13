@@ -6,7 +6,7 @@ export async function GET(request: Request) {
   // code is one-time redemption code supabase include in reset email link
   const code = searchParams.get('code');
   // next is destination page to redirect after code is exchanged
-  const next = searchParams.get('next') ?? '/account';
+  const next = searchParams.get('next') ?? '/account/update-password';
 
   if (code) {
     const supabase = await createClient();

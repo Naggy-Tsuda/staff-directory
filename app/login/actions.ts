@@ -59,5 +59,5 @@ export async function signup(
 
   // All good, send them to the account page
   revalidatePath('/', 'layout');
-  redirect('/account');
+  redirect('/staff');
 }
