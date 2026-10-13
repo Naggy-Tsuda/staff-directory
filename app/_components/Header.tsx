@@ -31,6 +31,9 @@ export default async function Header() {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Staff Directory
             </Typography>
+            <Button href="/staff" color="inherit">
+              Staff
+            </Button>
             {isAdmin && (
               <Button href="/users" color="inherit">
                 Users
