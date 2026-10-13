@@ -1,10 +1,12 @@
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import { LogoutButton } from './LogoutButton';
 import { createClient } from '@/lib/supabase/server';
+import { isCurrentUserAdmin } from '@/lib/supabase/auth';
 
 // Top bar runs on server so it can check who is logged in
 export default async function Header() {
@@ -15,6 +17,8 @@ export default async function Header() {
   if (!user) {
     return null;
   }
+
+  const isAdmin = await isCurrentUserAdmin();
 
   // Display header only if user is logged in
   return (
@@ -27,6 +31,11 @@ export default async function Header() {
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               Staff Directory
             </Typography>
+            {isAdmin && (
+              <Button href="/users" color="inherit">
+                Users
+              </Button>
+            )}
           </Box>
           <LogoutButton />
         </Toolbar>
