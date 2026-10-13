@@ -7,6 +7,8 @@ import Image from 'next/image';
 import { LogoutButton } from './LogoutButton';
 import { createClient } from '@/lib/supabase/server';
 import { isCurrentUserAdmin } from '@/lib/supabase/auth';
+import Stack from '@mui/material/Stack';
+import Link from 'next/link';
 
 // Top bar runs on server so it can check who is logged in
 export default async function Header() {
@@ -27,22 +29,26 @@ export default async function Header() {
         <Toolbar>
           {/* Logo */}
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, flexGrow: 1 }}>
-            <Image src="/logo.png" alt="Logo" width={32} height={24} priority />
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Staff Directory
-            </Typography>
-            <Button href="/staff" color="inherit">
-              Staff
-            </Button>
-            {isAdmin && (
-              <Button href="/users" color="inherit">
-                Users
+            <Link href={'/staff'} style={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
+              <Image src="/logo.png" alt="Logo" width={32} height={24} priority />
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1, color: 'inherit' }}>
+                Staff Directory
+              </Typography>
+            </Link>
+            <Stack direction="row" sx={{ mr: 2 }}>
+              <Button href="/staff" color="inherit">
+                Staff
               </Button>
-            )}
+              {isAdmin && (
+                <Button href="/users" color="inherit">
+                  Users
+                </Button>
+              )}
+            </Stack>
           </Box>
           <LogoutButton />
         </Toolbar>
       </AppBar>
-    </Box>
+    </Box >
   );
 }

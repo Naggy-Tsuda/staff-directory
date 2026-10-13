@@ -3,6 +3,9 @@ import { updateSession } from './lib/supabase/proxy';
 
 export async function proxy(request: NextRequest) {
   const { user, response } = await updateSession(request);
+  if (request.headers.has('next-action')) {
+    return response;
+  }
 
   // URL for not logged in users
   const isPublicPath =
