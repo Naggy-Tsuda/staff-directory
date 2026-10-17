@@ -31,7 +31,7 @@ export default function StaffList({ canEdit }: {
     const { data, error } = await supabase
       .from('staff')
       .select('*')
-      .order('id');
+      .order('first_name');
 
     if (!error && data) {
       setRows(data);
