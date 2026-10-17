@@ -79,6 +79,8 @@ export default function StaffList({ canEdit }: {
           Edit
         </Button>
       ),
+      disableColumnMenu: true,
+      sortable: false,
     },
     {
       field: 'delete',
@@ -90,6 +92,8 @@ export default function StaffList({ canEdit }: {
           Delete
         </Button>
       ),
+      disableColumnMenu: true,
+      sortable: false,
     },
   ];
 
@@ -98,14 +102,17 @@ export default function StaffList({ canEdit }: {
       field: 'avatar_url',
       headerName: 'Avatar',
       width: 80,
+      display: 'flex',
       renderCell: (params) => (
         <Avatar src={params.row.avatar_url ?? undefined} />
       ),
+      disableColumnMenu: true,
+      sortable: false,
     },
-    { field: 'first_name', headerName: 'First Name', flex: 1 },
-    { field: 'last_name', headerName: 'Last Name', flex: 1 },
-    { field: 'email', headerName: 'Email', flex: 1.5 },
-    { field: 'subject', headerName: 'Subject', flex: 1.5 },
+    { field: 'first_name', headerName: 'First Name', flex: 1, minWidth: 120 },
+    { field: 'last_name', headerName: 'Last Name', flex: 1, minWidth: 120 },
+    { field: 'email', headerName: 'Email', flex: 1.5, minWidth: 200 },
+    { field: 'subject', headerName: 'Subject', flex: 1.5, minWidth: 150 },
     ...(canEdit ? actionColumns : []),
   ];
 
