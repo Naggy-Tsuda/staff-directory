@@ -29,7 +29,12 @@ export default function UsersList() {
       return;
     }
 
-    setRows(data ?? []);
+    // Sort by email
+    const sorted = ([...(data ?? [])] as UserRow[]).sort((a, b) =>
+      a.email.localeCompare(b.email),
+    );
+
+    setRows(sorted);
   }, [supabase]);
 
   useEffect(() => {
