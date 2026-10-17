@@ -22,6 +22,21 @@ type StaffFormProps = {
   initialStaff?: Staff | null
 }
 
+function avatarPathFromUrl(url: string): string | null {
+  const marker = '/object/public/avatars/';
+  const index = url.indexOf(marker);
+
+  if (index === -1) {
+    return null;
+  }
+
+  try {
+    return decodeURIComponent(url.slice(index + marker.length));
+  } catch {
+    return null;
+  }
+}
+
 export default function StaffForm({
   mode,
   editingId,
@@ -38,6 +53,7 @@ export default function StaffForm({
   const [subject, setSubject] = useState(initialStaff?.subject ?? '');
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState(initialStaff?.avatar_url ?? '');
+  const [shouldDeleteAvatar, setShouldDeleteAvatar] = useState(false);
   const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   // Checks if form is filled in right, returns errors
@@ -93,6 +109,13 @@ export default function StaffForm({
 
     setAvatarFile(file);
     setAvatarPreview(file.type.startsWith('image/') ? URL.createObjectURL(file) : '');
+    setShouldDeleteAvatar(false);
+  }
+
+  function handleRemoveAvatar() {
+    setAvatarFile(null);
+    setAvatarPreview('');
+    setShouldDeleteAvatar(true);
   }
 
   // Prevent signing up with same email
@@ -121,9 +144,18 @@ export default function StaffForm({
     setIsSaving(true);
 
     try {
-      let newAvatarUrl = initialStaff?.avatar_url ?? null;
+      let newAvatarURL = initialStaff?.avatar_url ?? null;
 
-      if (avatarFile) {
+      if (shouldDeleteAvatar) {
+        newAvatarURL = null;
+
+        if (initialStaff?.avatar_url) {
+          const path = avatarPathFromUrl(initialStaff.avatar_url);
+          if (path) {
+            await supabase.storage.from('avatars').remove([path]);
+          }
+        }
+      } else if (avatarFile) {
         const path = `${Date.now()}-${avatarFile.name}`;
         const { error: uploadError } = await supabase.storage
           .from('avatars')
@@ -134,7 +166,7 @@ export default function StaffForm({
           return;
         }
 
-        newAvatarUrl = supabase.storage
+        newAvatarURL = supabase.storage
           .from('avatars')
           .getPublicUrl(path)
           .data.publicUrl;
@@ -147,7 +179,7 @@ export default function StaffForm({
           last_name: lastName,
           email: email,
           subject: subject,
-          avatar_url: newAvatarUrl,
+          avatar_url: newAvatarURL,
         });
 
         if (error) {
@@ -163,7 +195,7 @@ export default function StaffForm({
             last_name: lastName,
             email: email,
             subject: subject,
-            avatar_url: newAvatarUrl,
+            avatar_url: newAvatarURL,
           })
           .eq('id', editingId);
 
@@ -204,6 +236,12 @@ export default function StaffForm({
                 onChange={handleAvatarChange}
               />
             </Button>
+
+            {avatarPreview && (
+              <Button color="error" onClick={handleRemoveAvatar} variant="outlined">
+                Remove Avatar
+              </Button>
+            )}
           </Box>
 
           <TextField
