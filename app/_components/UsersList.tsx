@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, MenuItem, Paper, Select, Typography } from '@mui/material';
+import { Box, Divider, MenuItem, Paper, Select, TextField, Typography } from '@mui/material';
 import { createClient } from '@/lib/supabase/client';
 
 type UserRow = {
@@ -16,6 +16,12 @@ export default function UsersList() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [search, setSearch] = useState('');
+
+  const filterdRows = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    return rows.filter(row => row.email.toLowerCase().includes(term));
+  }, [rows, search]);
 
   const loadUsers = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -70,18 +76,48 @@ export default function UsersList() {
   }
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ p: { xs: 2, sm: 4 } }}>
       <Typography variant="h4" sx={{ mb: 3 }}>
         Users
       </Typography>
 
-      <Paper sx={{ p: 2 }}>
-        {rows.map((row) => (
+      <Paper sx={{ maxWidth: 560, p: 2 }}>
+
+        <TextField fullWidth label='Search'
+          onChange={event => setSearch(event.target.value)}
+          placeholder='Search by email'
+          type="search"
+          size={'small'}
+          value={search}
+        />
+        <Divider
+          sx={{ my: 4 }} />
+
+        {filterdRows.length === 0 && (
+          <Typography variant="body2" sx={{ mb: 4, textAlign: 'center' }}>
+            No users found
+          </Typography>
+        )}
+
+        {filterdRows.map((row) => (
           <Box
             key={row.user_id}
-            sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 1 }}
+            sx={{
+              alignItems: { xs: 'stretch', sm: 'center' },
+              borderBottom: 1,
+              borderColor: 'divider',
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              gap: 2,
+              py: 1.5,
+              '&:last-child': { borderBottom: 'none' }
+            }}
           >
-            <Typography sx={{ flexGrow: 1 }}>{row.email}</Typography>
+            <Typography
+              sx={{ flexGrow: 1, minWidth: 0, overflowWrap: 'anywhere' }}
+            >
+              {row.email}
+            </Typography>
             <Select
               value={row.role}
               size="small"
@@ -92,8 +128,9 @@ export default function UsersList() {
               <MenuItem value="admin">Admin</MenuItem>
             </Select>
           </Box>
-        ))}
-      </Paper>
-    </Box>
+        ))
+        }
+      </Paper >
+    </Box >
   );
 }
