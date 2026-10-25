@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Box, MenuItem, Paper, Select, Typography } from '@mui/material';
+import { Box, Divider, MenuItem, Paper, Select, TextField, Typography } from '@mui/material';
 import { createClient } from '@/lib/supabase/client';
 
 type UserRow = {
@@ -16,6 +16,12 @@ export default function UsersList() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [search, setSearch] = useState('');
+
+  const filterdRows = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    return rows.filter(row => row.email.toLowerCase().includes(term));
+  }, [rows, search]);
 
   const loadUsers = useCallback(async () => {
     const { data: { user } } = await supabase.auth.getUser();
@@ -76,7 +82,24 @@ export default function UsersList() {
       </Typography>
 
       <Paper sx={{ maxWidth: 560, p: 2 }}>
-        {rows.map((row) => (
+
+        <TextField fullWidth label='Search'
+          onChange={event => setSearch(event.target.value)}
+          placeholder='Search by email'
+          type="search"
+          size={'small'}
+          value={search}
+        />
+        <Divider
+          sx={{ my: 4 }} />
+
+        {filterdRows.length === 0 && (
+          <Typography variant="body2" sx={{ mb: 4, textAlign: 'center' }}>
+            No users found
+          </Typography>
+        )}
+
+        {filterdRows.map((row) => (
           <Box
             key={row.user_id}
             sx={{
