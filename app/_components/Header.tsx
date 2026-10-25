@@ -1,14 +1,15 @@
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+// import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Image from 'next/image';
 import { LogoutButton } from './LogoutButton';
 import { createClient } from '@/lib/supabase/server';
 import { isCurrentUserAdmin } from '@/lib/supabase/auth';
-import Stack from '@mui/material/Stack';
+// import Stack from '@mui/material/Stack';
 import Link from 'next/link';
+import HeaderNav from './HeaderNav';
 
 // Top bar runs on server so it can check who is logged in
 export default async function Header() {
@@ -43,7 +44,7 @@ export default async function Header() {
               Staff Directory
             </Typography>
           </Link>
-          <Stack direction="row" sx={{ mr: 2 }}>
+          {/* <Stack direction="row" sx={{ mr: 2 }}>
             <Button href="/staff" color="inherit">
               Staff
             </Button>
@@ -52,8 +53,9 @@ export default async function Header() {
                 Users
               </Button>
             )}
-          </Stack>
+          </Stack> */}
           {/* </Box> */}
+          <HeaderNav isAdmin={isAdmin} />
           <LogoutButton />
         </Toolbar>
       </AppBar>
