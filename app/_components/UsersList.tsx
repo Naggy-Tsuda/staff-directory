@@ -70,18 +70,31 @@ export default function UsersList() {
   }
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ p: { xs: 2, sm: 4 } }}>
       <Typography variant="h4" sx={{ mb: 3 }}>
         Users
       </Typography>
 
-      <Paper sx={{ p: 2 }}>
+      <Paper sx={{ maxWidth: 560, p: 2 }}>
         {rows.map((row) => (
           <Box
             key={row.user_id}
-            sx={{ display: 'flex', alignItems: 'center', gap: 2, py: 1 }}
+            sx={{
+              alignItems: { xs: 'stretch', sm: 'center' },
+              borderBottom: 1,
+              borderColor: 'divider',
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              gap: 2,
+              py: 1.5,
+              '&:last-child': { borderBottom: 'none' }
+            }}
           >
-            <Typography sx={{ flexGrow: 1 }}>{row.email}</Typography>
+            <Typography
+              sx={{ flexGrow: 1, minWidth: 0, overflowWrap: 'anywhere' }}
+            >
+              {row.email}
+            </Typography>
             <Select
               value={row.role}
               size="small"
@@ -92,8 +105,9 @@ export default function UsersList() {
               <MenuItem value="admin">Admin</MenuItem>
             </Select>
           </Box>
-        ))}
-      </Paper>
-    </Box>
+        ))
+        }
+      </Paper >
+    </Box >
   );
 }
